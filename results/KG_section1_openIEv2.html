@@ -1,0 +1,1003 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1280px;
+                 height: 720px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1280px;
+                 height: 720px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="rules anti-collision light">rules anti-collision light</option>
+                                
+                                    <option value="interpretation">interpretation</option>
+                                
+                                    <option value="air regulationa">air regulationa</option>
+                                
+                                    <option value="subject paragraph terms">subject paragraph terms</option>
+                                
+                                    <option value="term aerodrome traffic zone">term aerodrome traffic zone</option>
+                                
+                                    <option value="number">number</option>
+                                
+                                    <option value="they">they</option>
+                                
+                                    <option value="aircraft">aircraft</option>
+                                
+                                    <option value="rule">rule</option>
+                                
+                                    <option value="common rules">common rules</option>
+                                
+                                    <option value="air tobe">air tobe</option>
+                                
+                                    <option value="term sera">term sera</option>
+                                
+                                    <option value="nothing">nothing</option>
+                                
+                                    <option value="order">order</option>
+                                
+                                    <option value="respect classes aircraft">respect classes aircraft</option>
+                                
+                                    <option value="city">city</option>
+                                
+                                    <option value="aerodrome accordance">aerodrome accordance</option>
+                                
+                                    <option value="accordance">accordance</option>
+                                
+                                    <option value="open air assembly">open air assembly</option>
+                                
+                                    <option value="air assembly">air assembly</option>
+                                
+                                    <option value="land accordance">land accordance</option>
+                                
+                                    <option value="united kingdom">united kingdom</option>
+                                
+                                    <option value="classification airspace">classification airspace</option>
+                                
+                                    <option value="banners similar articles">banners similar articles</option>
+                                
+                                    <option value="towing">towing</option>
+                                
+                                    <option value="air traffic control unit">air traffic control unit</option>
+                                
+                                    <option value="flying machine glider">flying machine glider</option>
+                                
+                                    <option value="machine glider">machine glider</option>
+                                
+                                    <option value="subject paragraph machine">subject paragraph machine</option>
+                                
+                                    <option value="subject paragraph flying machine">subject paragraph flying machine</option>
+                                
+                                    <option value="such aerodromes">such aerodromes</option>
+                                
+                                    <option value="time">time</option>
+                                
+                                    <option value="such times">such times</option>
+                                
+                                    <option value="aerodrome">aerodrome</option>
+                                
+                                    <option value="aerodrome unit flight information service">aerodrome unit flight information service</option>
+                                
+                                    <option value="commander">commander</option>
+                                
+                                    <option value="unit">unit</option>
+                                
+                                    <option value="information">information</option>
+                                
+                                    <option value="flight">flight</option>
+                                
+                                    <option value="watch kept">watch kept</option>
+                                
+                                    <option value="watch">watch</option>
+                                
+                                    <option value="radio frequency">radio frequency</option>
+                                
+                                    <option value="appropriate radio frequency">appropriate radio frequency</option>
+                                
+                                    <option value="uncontrolled aerodrome">uncontrolled aerodrome</option>
+                                
+                                    <option value="air trafficcontrol service">air trafficcontrol service</option>
+                                
+                                    <option value="cap">cap</option>
+                                
+                                    <option value="done accordance">done accordance</option>
+                                
+                                    <option value="light required">light required</option>
+                                
+                                    <option value="event failure anti-collision light">event failure anti-collision light</option>
+                                
+                                    <option value="circumstance">circumstance</option>
+                                
+                                    <option value="serum">serum</option>
+                                
+                                    <option value="subject paragraph yellow broken lines">subject paragraph yellow broken lines</option>
+                                
+                                    <option value="subject paragraph two yellow broken lines">subject paragraph two yellow broken lines</option>
+                                
+                                    <option value="subject paragraph">subject paragraph</option>
+                                
+                                    <option value="paragraph">paragraph</option>
+                                
+                                    <option value="part">part</option>
+                                
+                                    <option value="marker">marker</option>
+                                
+                                    <option value="markers equal width centimetres">markers equal width centimetres</option>
+                                
+                                    <option value="markers width centimetres">markers width centimetres</option>
+                                
+                                    <option value="striped markers">striped markers</option>
+                                
+                                    <option value="stripe">stripe</option>
+                                
+                                    <option value="structures markers">structures markers</option>
+                                
+                                    <option value="pattern must visible">pattern must visible</option>
+                                
+                                    <option value="pattern">pattern</option>
+                                
+                                    <option value="intervals metres">intervals metres</option>
+                                
+                                    <option value="white flush">white flush</option>
+                                
+                                    <option value="white">white</option>
+                                
+                                    <option value="white flat">white flat</option>
+                                
+                                    <option value="white flat flush">white flat flush</option>
+                                
+                                    <option value="intervals notexceeding metres">intervals notexceeding metres</option>
+                                
+                                    <option value="metre">metre</option>
+                                
+                                    <option value="white letter">white letter</option>
+                                
+                                    <option value="letter">letter</option>
+                                
+                                    <option value="yellow cross">yellow cross</option>
+                                
+                                    <option value="banner">banner</option>
+                                
+                                    <option value="article">article</option>
+                                
+                                    <option value="tow ropes">tow ropes</option>
+                                
+                                    <option value="similar articles">similar articles</option>
+                                
+                                    <option value="centre">centre</option>
+                                
+                                    <option value="subject paragraph aircraft">subject paragraph aircraft</option>
+                                
+                                    <option value="instrument flight rules">instrument flight rules</option>
+                                
+                                    <option value="aircraft musta">aircraft musta</option>
+                                
+                                    <option value="paragraphc">paragraphc</option>
+                                
+                                    <option value="unit.a instrument flight rules">unit.a instrument flight rules</option>
+                                
+                                    <option value="relation rotorcraft flashing">relation rotorcraft flashing</option>
+                                
+                                    <option value="relation rotorcraft">relation rotorcraft</option>
+                                
+                                    <option value="meaning asgiven">meaning asgiven</option>
+                                
+                                    <option value="same meaning asgiven">same meaning asgiven</option>
+                                
+                                    <option value="same meaning">same meaning</option>
+                                
+                                    <option value="meaning">meaning</option>
+                                
+                                    <option value="same meaning given article theair navigation order references">same meaning given article theair navigation order references</option>
+                                
+                                    <option value="same meaning given article navigation order references">same meaning given article navigation order references</option>
+                                
+                                    <option value="provision withthe">provision withthe</option>
+                                
+                                    <option value="meaning given article navigation order references">meaning given article navigation order references</option>
+                                
+                                    <option value="meaning given article theair navigation order references">meaning given article theair navigation order references</option>
+                                
+                                    <option value="commission regulation">commission regulation</option>
+                                
+                                    <option value="united kingdom andb">united kingdom andb</option>
+                                
+                                    <option value="commission implementing regulation">commission implementing regulation</option>
+                                
+                                    <option value="o.j. no.l">o.j. no.l</option>
+                                
+                                    <option value="law anycountry">law anycountry</option>
+                                
+                                    <option value="annex">annex</option>
+                                
+                                    <option value="law anycountry other">law anycountry other</option>
+                                
+                                    <option value="law anycountry other than united kingdom">law anycountry other than united kingdom</option>
+                                
+                                    <option value="military aircraft">military aircraft</option>
+                                
+                                    <option value="certaincap">certaincap</option>
+                                
+                                    <option value="person vehicle andb subject">person vehicle andb subject</option>
+                                
+                                    <option value="permission granted for purposes rule">permission granted for purposes rule</option>
+                                
+                                    <option value="permission">permission</option>
+                                
+                                    <option value="permission granted">permission granted</option>
+                                
+                                    <option value="notified controlled airspacea other">notified controlled airspacea other</option>
+                                
+                                    <option value="procedure">procedure</option>
+                                
+                                    <option value="permission ofthe caa">permission ofthe caa</option>
+                                
+                                    <option value="town settlement">town settlement</option>
+                                
+                                    <option value="normal aviation practice">normal aviation practice</option>
+                                
+                                    <option value="aeronautical information publication">aeronautical information publication</option>
+                                
+                                    <option value="accordance arrangements made air traffic control unit">accordance arrangements made air traffic control unit</option>
+                                
+                                    <option value="accordance arrangements made">accordance arrangements made</option>
+                                
+                                    <option value="arrangements made with air traffic control unit">arrangements made with air traffic control unit</option>
+                                
+                                    <option value="accordance arrangements">accordance arrangements</option>
+                                
+                                    <option value="considered">considered</option>
+                                
+                                    <option value="command">command</option>
+                                
+                                    <option value="single aircraft">single aircraft</option>
+                                
+                                    <option value="land order">land order</option>
+                                
+                                    <option value="landing">landing</option>
+                                
+                                    <option value="aircraft order priority">aircraft order priority</option>
+                                
+                                    <option value="clear">clear</option>
+                                
+                                    <option value="clear landing area">clear landing area</option>
+                                
+                                    <option value="landing area">landing area</option>
+                                
+                                    <option value="possible">possible</option>
+                                
+                                    <option value="soon possible">soon possible</option>
+                                
+                                    <option value="notified">notified</option>
+                                
+                                    <option value="table">table</option>
+                                
+                                    <option value="purpose">purpose</option>
+                                
+                                    <option value="notified hours">notified hours</option>
+                                
+                                    <option value="hour">hour</option>
+                                
+                                    <option value="unit flight information service">unit flight information service</option>
+                                
+                                    <option value="air traffic">air traffic</option>
+                                
+                                    <option value="airground airground communications service unit communications service unit">airground airground communications service unit communications service unit</option>
+                                
+                                    <option value="paragraphs appropriate">paragraphs appropriate</option>
+                                
+                                    <option value="flight conducted within aerodrome traffic zone">flight conducted within aerodrome traffic zone</option>
+                                
+                                    <option value="flight conducted safely within aerodrome traffic zone">flight conducted safely within aerodrome traffic zone</option>
+                                
+                                    <option value="flight conducted">flight conducted</option>
+                                
+                                    <option value="flight conducted safely">flight conducted safely</option>
+                                
+                                    <option value="flight information centre">flight information centre</option>
+                                
+                                    <option value="there flight information centre">there flight information centre</option>
+                                
+                                    <option value="visual means">visual means</option>
+                                
+                                    <option value="instruction">instruction</option>
+                                
+                                    <option value="visual means fitted with ground">visual means fitted with ground</option>
+                                
+                                    <option value="means fitted with ground">means fitted with ground</option>
+                                
+                                    <option value="communication">communication</option>
+                                
+                                    <option value="visual means fitted with means communication radio">visual means fitted with means communication radio</option>
+                                
+                                    <option value="means fitted with means communication radio">means fitted with means communication radio</option>
+                                
+                                    <option value="means fitted with means communication radio with ground">means fitted with means communication radio with ground</option>
+                                
+                                    <option value="such instructions">such instructions</option>
+                                
+                                    <option value="means fitted">means fitted</option>
+                                
+                                    <option value="mean">mean</option>
+                                
+                                    <option value="visual means fitted">visual means fitted</option>
+                                
+                                    <option value="visual means fitted with means communication radio with ground">visual means fitted with means communication radio with ground</option>
+                                
+                                    <option value="regardless whether not air traffic zone exists">regardless whether not air traffic zone exists</option>
+                                
+                                    <option value="during day event failure anti-collision light provided">during day event failure anti-collision light provided</option>
+                                
+                                    <option value="repaired opportunity">repaired opportunity</option>
+                                
+                                    <option value="opportunity">opportunity</option>
+                                
+                                    <option value="repaired practicable opportunity">repaired practicable opportunity</option>
+                                
+                                    <option value="repaired earliest practicable opportunity">repaired earliest practicable opportunity</option>
+                                
+                                    <option value="practicable opportunity">practicable opportunity</option>
+                                
+                                    <option value="event failure anti-collision light provided">event failure anti-collision light provided</option>
+                                
+                                    <option value="day">day</option>
+                                
+                                    <option value="fly">fly</option>
+                                
+                                    <option value="earliest practicable opportunity">earliest practicable opportunity</option>
+                                
+                                    <option value="earliest opportunity">earliest opportunity</option>
+                                
+                                    <option value="repaired earliest opportunity">repaired earliest opportunity</option>
+                                
+                                    <option value="two black balls">two black balls</option>
+                                
+                                    <option value="two black balls suspended">two black balls suspended</option>
+                                
+                                    <option value="two balls suspended below control car">two balls suspended below control car</option>
+                                
+                                    <option value="two balls suspended">two balls suspended</option>
+                                
+                                    <option value="two balls">two balls</option>
+                                
+                                    <option value="two black balls suspended below control car">two black balls suspended below control car</option>
+                                
+                                    <option value="airship">airship</option>
+                                
+                                    <option value="except lawful authority">except lawful authority</option>
+                                
+                                    <option value="paragraph cap">paragraph cap</option>
+                                
+                                    <option value="visual holding position">visual holding position</option>
+                                
+                                    <option value="holding position associated">holding position associated</option>
+                                
+                                    <option value="visual position associated">visual position associated</option>
+                                
+                                    <option value="designated visual position associated with runway">designated visual position associated with runway</option>
+                                
+                                    <option value="visual holding position associated">visual holding position associated</option>
+                                
+                                    <option value="position">position</option>
+                                
+                                    <option value="designated holding position associated with runway">designated holding position associated with runway</option>
+                                
+                                    <option value="designated visual position associated">designated visual position associated</option>
+                                
+                                    <option value="position associated">position associated</option>
+                                
+                                    <option value="visual holding position associated with runway">visual holding position associated with runway</option>
+                                
+                                    <option value="designated visual holding position associated with runway">designated visual holding position associated with runway</option>
+                                
+                                    <option value="position associated with runway">position associated with runway</option>
+                                
+                                    <option value="designated visual holding position">designated visual holding position</option>
+                                
+                                    <option value="holding position associated with runway">holding position associated with runway</option>
+                                
+                                    <option value="holding position">holding position</option>
+                                
+                                    <option value="designated holding position associated">designated holding position associated</option>
+                                
+                                    <option value="designated position associated with runway">designated position associated with runway</option>
+                                
+                                    <option value="visual position associated with runway">visual position associated with runway</option>
+                                
+                                    <option value="designated holding position">designated holding position</option>
+                                
+                                    <option value="designated visual holding position associated">designated visual holding position associated</option>
+                                
+                                    <option value="designated visual position">designated visual position</option>
+                                
+                                    <option value="designated position associated">designated position associated</option>
+                                
+                                    <option value="designated position">designated position</option>
+                                
+                                    <option value="visual position">visual position</option>
+                                
+                                    <option value="position other">position other</option>
+                                
+                                    <option value="holding position other than closest">holding position other than closest</option>
+                                
+                                    <option value="holding position other">holding position other</option>
+                                
+                                    <option value="position other than closest">position other than closest</option>
+                                
+                                    <option value="boundary">boundary</option>
+                                
+                                    <option value="runway">runway</option>
+                                
+                                    <option value="taxiway apron">taxiway apron</option>
+                                
+                                    <option value="orange stripes">orange stripes</option>
+                                
+                                    <option value="flags centimetres">flags centimetres</option>
+                                
+                                    <option value="orange stripe">orange stripe</option>
+                                
+                                    <option value="boundary aerodrome">boundary aerodrome</option>
+                                
+                                    <option value="diagram">diagram</option>
+                                
+                                    <option value="more">more</option>
+                                
+                                    <option value="not more than centimetres">not more than centimetres</option>
+                                
+                                    <option value="not more">not more</option>
+                                
+                                    <option value="more than centimetres from top">more than centimetres from top</option>
+                                
+                                    <option value="not more than centimetres from top">not more than centimetres from top</option>
+                                
+                                    <option value="insideand outside aerodrome">insideand outside aerodrome</option>
+                                
+                                    <option value="insideand">insideand</option>
+                                
+                                    <option value="more than centimetres">more than centimetres</option>
+                                
+                                    <option value="paragraphcap">paragraphcap</option>
+                                
+                                    <option value="angle">angle</option>
+                                
+                                    <option value="two arms">two arms</option>
+                                
+                                    <option value="right angles">right angles</option>
+                                
+                                    <option value="right">right</option>
+                                
+                                    <option value="right centre">right centre</option>
+                                
+                                    <option value="airspace classifications">airspace classifications</option>
+                                
+                                    <option value="requirement">requirement</option>
+                                
+                                    <option value="accordance with requirements">accordance with requirements</option>
+                                
+                                    <option value="accordance with instrument flight rulesa">accordance with instrument flight rulesa</option>
+                                
+                                    <option value="instrument flight rulesa">instrument flight rulesa</option>
+                                
+                                    <option value="conditions paragraph">conditions paragraph</option>
+                                
+                                    <option value="section sera.cap">section sera.cap</option>
+                                
+                                    <option value="within airspace paragraphc remain">within airspace paragraphc remain</option>
+                                
+                                    <option value="unless authorised">unless authorised</option>
+                                
+                                    <option value="controlled airspace">controlled airspace</option>
+                                
+                                    <option value="air regulations">air regulations</option>
+                                
+                                    <option value="prescribed">prescribed</option>
+                                
+                                    <option value="dayb">dayb</option>
+                                
+                                    <option value="horizontally cloudand flight visibility">horizontally cloudand flight visibility</option>
+                                
+                                    <option value="vertically cloudand flight visibility">vertically cloudand flight visibility</option>
+                                
+                                    <option value="paragraphc remain">paragraphc remain</option>
+                                
+                                    <option value="cloudand flight visibility">cloudand flight visibility</option>
+                                
+                                    <option value="authorised">authorised</option>
+                                
+                                    <option value="horizontally vertically cloudand flight visibility">horizontally vertically cloudand flight visibility</option>
+                                
+                                    <option value="within controlled airspace paragraphc remain">within controlled airspace paragraphc remain</option>
+                                
+                                    <option value="airspace">airspace</option>
+                                
+                                    <option value="passengers on all flights except holiday charters">passengers on all flights except holiday charters</option>
+                                
+                                    <option value="passengers on holiday charters">passengers on holiday charters</option>
+                                
+                                    <option value="children (between 2–12 years) or infants under 2years of age if occupying a separate seat">children (between 2–12 years) or infants under 2years of age if occupying a separate seat</option>
+                                
+                                    <option value="infants under 2 years of age if sharing a seat withan adult">infants under 2 years of age if sharing a seat withan adult</option>
+                                
+                                    <option value="flight crew">flight crew</option>
+                                
+                                    <option value="cabin crew">cabin crew</option>
+                                
+                                    <option value="male passengers">male passengers</option>
+                                
+                                    <option value="female passengers">female passengers</option>
+                                
+                                    <option value="children (between 2-12 years) or infants under 2years of age if occupying a separate seat">children (between 2-12 years) or infants under 2years of age if occupying a separate seat</option>
+                                
+                                    <option value="88kg">88kg</option>
+                                
+                                    <option value="83gk">83gk</option>
+                                
+                                    <option value="35kg">35kg</option>
+                                
+                                    <option value="0kg">0kg</option>
+                                
+                                    <option value="85kg">85kg</option>
+                                
+                                    <option value="75kg">75kg</option>
+                                
+                                    <option value="70kg">70kg</option>
+                                
+                                    <option value="69kg">69kg</option>
+                                
+                                    <option value="84kg">84kg</option>
+                                
+                                    <option value="76kg">76kg</option>
+                                
+                                    <option value="104kg">104kg</option>
+                                
+                                    <option value="86gk">86gk</option>
+                                
+                                    <option value="96kg">96kg</option>
+                                
+                                    <option value="78kg">78kg</option>
+                                
+                                    <option value="92kg">92kg</option>
+                                
+                                    <option value="74kg">74kg</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "rules anti-collision light", "label": "rules anti-collision light", "shape": "dot"}, {"color": "#97c2fc", "id": "interpretation", "label": "interpretation", "shape": "dot"}, {"color": "#97c2fc", "id": "air regulationa", "label": "air regulationa", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph terms", "label": "subject paragraph terms", "shape": "dot"}, {"color": "#97c2fc", "id": "term aerodrome traffic zone", "label": "term aerodrome traffic zone", "shape": "dot"}, {"color": "#97c2fc", "id": "number", "label": "number", "shape": "dot"}, {"color": "#97c2fc", "id": "they", "label": "they", "shape": "dot"}, {"color": "#97c2fc", "id": "aircraft", "label": "aircraft", "shape": "dot"}, {"color": "#97c2fc", "id": "rule", "label": "rule", "shape": "dot"}, {"color": "#97c2fc", "id": "common rules", "label": "common rules", "shape": "dot"}, {"color": "#97c2fc", "id": "air tobe", "label": "air tobe", "shape": "dot"}, {"color": "#97c2fc", "id": "term sera", "label": "term sera", "shape": "dot"}, {"color": "#97c2fc", "id": "nothing", "label": "nothing", "shape": "dot"}, {"color": "#97c2fc", "id": "order", "label": "order", "shape": "dot"}, {"color": "#97c2fc", "id": "respect classes aircraft", "label": "respect classes aircraft", "shape": "dot"}, {"color": "#97c2fc", "id": "city", "label": "city", "shape": "dot"}, {"color": "#97c2fc", "id": "aerodrome accordance", "label": "aerodrome accordance", "shape": "dot"}, {"color": "#97c2fc", "id": "accordance", "label": "accordance", "shape": "dot"}, {"color": "#97c2fc", "id": "open air assembly", "label": "open air assembly", "shape": "dot"}, {"color": "#97c2fc", "id": "air assembly", "label": "air assembly", "shape": "dot"}, {"color": "#97c2fc", "id": "land accordance", "label": "land accordance", "shape": "dot"}, {"color": "#97c2fc", "id": "united kingdom", "label": "united kingdom", "shape": "dot"}, {"color": "#97c2fc", "id": "classification airspace", "label": "classification airspace", "shape": "dot"}, {"color": "#97c2fc", "id": "banners similar articles", "label": "banners similar articles", "shape": "dot"}, {"color": "#97c2fc", "id": "towing", "label": "towing", "shape": "dot"}, {"color": "#97c2fc", "id": "air traffic control unit", "label": "air traffic control unit", "shape": "dot"}, {"color": "#97c2fc", "id": "flying machine glider", "label": "flying machine glider", "shape": "dot"}, {"color": "#97c2fc", "id": "machine glider", "label": "machine glider", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph machine", "label": "subject paragraph machine", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph flying machine", "label": "subject paragraph flying machine", "shape": "dot"}, {"color": "#97c2fc", "id": "such aerodromes", "label": "such aerodromes", "shape": "dot"}, {"color": "#97c2fc", "id": "time", "label": "time", "shape": "dot"}, {"color": "#97c2fc", "id": "such times", "label": "such times", "shape": "dot"}, {"color": "#97c2fc", "id": "aerodrome", "label": "aerodrome", "shape": "dot"}, {"color": "#97c2fc", "id": "aerodrome unit flight information service", "label": "aerodrome unit flight information service", "shape": "dot"}, {"color": "#97c2fc", "id": "commander", "label": "commander", "shape": "dot"}, {"color": "#97c2fc", "id": "unit", "label": "unit", "shape": "dot"}, {"color": "#97c2fc", "id": "information", "label": "information", "shape": "dot"}, {"color": "#97c2fc", "id": "flight", "label": "flight", "shape": "dot"}, {"color": "#97c2fc", "id": "watch kept", "label": "watch kept", "shape": "dot"}, {"color": "#97c2fc", "id": "watch", "label": "watch", "shape": "dot"}, {"color": "#97c2fc", "id": "radio frequency", "label": "radio frequency", "shape": "dot"}, {"color": "#97c2fc", "id": "appropriate radio frequency", "label": "appropriate radio frequency", "shape": "dot"}, {"color": "#97c2fc", "id": "uncontrolled aerodrome", "label": "uncontrolled aerodrome", "shape": "dot"}, {"color": "#97c2fc", "id": "air trafficcontrol service", "label": "air trafficcontrol service", "shape": "dot"}, {"color": "#97c2fc", "id": "cap", "label": "cap", "shape": "dot"}, {"color": "#97c2fc", "id": "done accordance", "label": "done accordance", "shape": "dot"}, {"color": "#97c2fc", "id": "light required", "label": "light required", "shape": "dot"}, {"color": "#97c2fc", "id": "event failure anti-collision light", "label": "event failure anti-collision light", "shape": "dot"}, {"color": "#97c2fc", "id": "circumstance", "label": "circumstance", "shape": "dot"}, {"color": "#97c2fc", "id": "serum", "label": "serum", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph yellow broken lines", "label": "subject paragraph yellow broken lines", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph two yellow broken lines", "label": "subject paragraph two yellow broken lines", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph", "label": "subject paragraph", "shape": "dot"}, {"color": "#97c2fc", "id": "paragraph", "label": "paragraph", "shape": "dot"}, {"color": "#97c2fc", "id": "part", "label": "part", "shape": "dot"}, {"color": "#97c2fc", "id": "marker", "label": "marker", "shape": "dot"}, {"color": "#97c2fc", "id": "markers equal width centimetres", "label": "markers equal width centimetres", "shape": "dot"}, {"color": "#97c2fc", "id": "markers width centimetres", "label": "markers width centimetres", "shape": "dot"}, {"color": "#97c2fc", "id": "striped markers", "label": "striped markers", "shape": "dot"}, {"color": "#97c2fc", "id": "stripe", "label": "stripe", "shape": "dot"}, {"color": "#97c2fc", "id": "structures markers", "label": "structures markers", "shape": "dot"}, {"color": "#97c2fc", "id": "pattern must visible", "label": "pattern must visible", "shape": "dot"}, {"color": "#97c2fc", "id": "pattern", "label": "pattern", "shape": "dot"}, {"color": "#97c2fc", "id": "intervals metres", "label": "intervals metres", "shape": "dot"}, {"color": "#97c2fc", "id": "white flush", "label": "white flush", "shape": "dot"}, {"color": "#97c2fc", "id": "white", "label": "white", "shape": "dot"}, {"color": "#97c2fc", "id": "white flat", "label": "white flat", "shape": "dot"}, {"color": "#97c2fc", "id": "white flat flush", "label": "white flat flush", "shape": "dot"}, {"color": "#97c2fc", "id": "intervals notexceeding metres", "label": "intervals notexceeding metres", "shape": "dot"}, {"color": "#97c2fc", "id": "metre", "label": "metre", "shape": "dot"}, {"color": "#97c2fc", "id": "white letter", "label": "white letter", "shape": "dot"}, {"color": "#97c2fc", "id": "letter", "label": "letter", "shape": "dot"}, {"color": "#97c2fc", "id": "yellow cross", "label": "yellow cross", "shape": "dot"}, {"color": "#97c2fc", "id": "banner", "label": "banner", "shape": "dot"}, {"color": "#97c2fc", "id": "article", "label": "article", "shape": "dot"}, {"color": "#97c2fc", "id": "tow ropes", "label": "tow ropes", "shape": "dot"}, {"color": "#97c2fc", "id": "similar articles", "label": "similar articles", "shape": "dot"}, {"color": "#97c2fc", "id": "centre", "label": "centre", "shape": "dot"}, {"color": "#97c2fc", "id": "subject paragraph aircraft", "label": "subject paragraph aircraft", "shape": "dot"}, {"color": "#97c2fc", "id": "instrument flight rules", "label": "instrument flight rules", "shape": "dot"}, {"color": "#97c2fc", "id": "aircraft musta", "label": "aircraft musta", "shape": "dot"}, {"color": "#97c2fc", "id": "paragraphc", "label": "paragraphc", "shape": "dot"}, {"color": "#97c2fc", "id": "unit.a instrument flight rules", "label": "unit.a instrument flight rules", "shape": "dot"}, {"color": "#97c2fc", "id": "relation rotorcraft flashing", "label": "relation rotorcraft flashing", "shape": "dot"}, {"color": "#97c2fc", "id": "relation rotorcraft", "label": "relation rotorcraft", "shape": "dot"}, {"color": "#97c2fc", "id": "meaning asgiven", "label": "meaning asgiven", "shape": "dot"}, {"color": "#97c2fc", "id": "same meaning asgiven", "label": "same meaning asgiven", "shape": "dot"}, {"color": "#97c2fc", "id": "same meaning", "label": "same meaning", "shape": "dot"}, {"color": "#97c2fc", "id": "meaning", "label": "meaning", "shape": "dot"}, {"color": "#97c2fc", "id": "same meaning given article theair navigation order references", "label": "same meaning given article theair navigation order references", "shape": "dot"}, {"color": "#97c2fc", "id": "same meaning given article navigation order references", "label": "same meaning given article navigation order references", "shape": "dot"}, {"color": "#97c2fc", "id": "provision withthe", "label": "provision withthe", "shape": "dot"}, {"color": "#97c2fc", "id": "meaning given article navigation order references", "label": "meaning given article navigation order references", "shape": "dot"}, {"color": "#97c2fc", "id": "meaning given article theair navigation order references", "label": "meaning given article theair navigation order references", "shape": "dot"}, {"color": "#97c2fc", "id": "commission regulation", "label": "commission regulation", "shape": "dot"}, {"color": "#97c2fc", "id": "united kingdom andb", "label": "united kingdom andb", "shape": "dot"}, {"color": "#97c2fc", "id": "commission implementing regulation", "label": "commission implementing regulation", "shape": "dot"}, {"color": "#97c2fc", "id": "o.j. no.l", "label": "o.j. no.l", "shape": "dot"}, {"color": "#97c2fc", "id": "law anycountry", "label": "law anycountry", "shape": "dot"}, {"color": "#97c2fc", "id": "annex", "label": "annex", "shape": "dot"}, {"color": "#97c2fc", "id": "law anycountry other", "label": "law anycountry other", "shape": "dot"}, {"color": "#97c2fc", "id": "law anycountry other than united kingdom", "label": "law anycountry other than united kingdom", "shape": "dot"}, {"color": "#97c2fc", "id": "military aircraft", "label": "military aircraft", "shape": "dot"}, {"color": "#97c2fc", "id": "certaincap", "label": "certaincap", "shape": "dot"}, {"color": "#97c2fc", "id": "person vehicle andb subject", "label": "person vehicle andb subject", "shape": "dot"}, {"color": "#97c2fc", "id": "permission granted for purposes rule", "label": "permission granted for purposes rule", "shape": "dot"}, {"color": "#97c2fc", "id": "permission", "label": "permission", "shape": "dot"}, {"color": "#97c2fc", "id": "permission granted", "label": "permission granted", "shape": "dot"}, {"color": "#97c2fc", "id": "notified controlled airspacea other", "label": "notified controlled airspacea other", "shape": "dot"}, {"color": "#97c2fc", "id": "procedure", "label": "procedure", "shape": "dot"}, {"color": "#97c2fc", "id": "permission ofthe caa", "label": "permission ofthe caa", "shape": "dot"}, {"color": "#97c2fc", "id": "town settlement", "label": "town settlement", "shape": "dot"}, {"color": "#97c2fc", "id": "normal aviation practice", "label": "normal aviation practice", "shape": "dot"}, {"color": "#97c2fc", "id": "aeronautical information publication", "label": "aeronautical information publication", "shape": "dot"}, {"color": "#97c2fc", "id": "accordance arrangements made air traffic control unit", "label": "accordance arrangements made air traffic control unit", "shape": "dot"}, {"color": "#97c2fc", "id": "accordance arrangements made", "label": "accordance arrangements made", "shape": "dot"}, {"color": "#97c2fc", "id": "arrangements made with air traffic control unit", "label": "arrangements made with air traffic control unit", "shape": "dot"}, {"color": "#97c2fc", "id": "accordance arrangements", "label": "accordance arrangements", "shape": "dot"}, {"color": "#97c2fc", "id": "considered", "label": "considered", "shape": "dot"}, {"color": "#97c2fc", "id": "command", "label": "command", "shape": "dot"}, {"color": "#97c2fc", "id": "single aircraft", "label": "single aircraft", "shape": "dot"}, {"color": "#97c2fc", "id": "land order", "label": "land order", "shape": "dot"}, {"color": "#97c2fc", "id": "landing", "label": "landing", "shape": "dot"}, {"color": "#97c2fc", "id": "aircraft order priority", "label": "aircraft order priority", "shape": "dot"}, {"color": "#97c2fc", "id": "clear", "label": "clear", "shape": "dot"}, {"color": "#97c2fc", "id": "clear landing area", "label": "clear landing area", "shape": "dot"}, {"color": "#97c2fc", "id": "landing area", "label": "landing area", "shape": "dot"}, {"color": "#97c2fc", "id": "possible", "label": "possible", "shape": "dot"}, {"color": "#97c2fc", "id": "soon possible", "label": "soon possible", "shape": "dot"}, {"color": "#97c2fc", "id": "notified", "label": "notified", "shape": "dot"}, {"color": "#97c2fc", "id": "table", "label": "table", "shape": "dot"}, {"color": "#97c2fc", "id": "purpose", "label": "purpose", "shape": "dot"}, {"color": "#97c2fc", "id": "notified hours", "label": "notified hours", "shape": "dot"}, {"color": "#97c2fc", "id": "hour", "label": "hour", "shape": "dot"}, {"color": "#97c2fc", "id": "unit flight information service", "label": "unit flight information service", "shape": "dot"}, {"color": "#97c2fc", "id": "air traffic", "label": "air traffic", "shape": "dot"}, {"color": "#97c2fc", "id": "airground airground communications service unit communications service unit", "label": "airground airground communications service unit communications service unit", "shape": "dot"}, {"color": "#97c2fc", "id": "paragraphs appropriate", "label": "paragraphs appropriate", "shape": "dot"}, {"color": "#97c2fc", "id": "flight conducted within aerodrome traffic zone", "label": "flight conducted within aerodrome traffic zone", "shape": "dot"}, {"color": "#97c2fc", "id": "flight conducted safely within aerodrome traffic zone", "label": "flight conducted safely within aerodrome traffic zone", "shape": "dot"}, {"color": "#97c2fc", "id": "flight conducted", "label": "flight conducted", "shape": "dot"}, {"color": "#97c2fc", "id": "flight conducted safely", "label": "flight conducted safely", "shape": "dot"}, {"color": "#97c2fc", "id": "flight information centre", "label": "flight information centre", "shape": "dot"}, {"color": "#97c2fc", "id": "there flight information centre", "label": "there flight information centre", "shape": "dot"}, {"color": "#97c2fc", "id": "visual means", "label": "visual means", "shape": "dot"}, {"color": "#97c2fc", "id": "instruction", "label": "instruction", "shape": "dot"}, {"color": "#97c2fc", "id": "visual means fitted with ground", "label": "visual means fitted with ground", "shape": "dot"}, {"color": "#97c2fc", "id": "means fitted with ground", "label": "means fitted with ground", "shape": "dot"}, {"color": "#97c2fc", "id": "communication", "label": "communication", "shape": "dot"}, {"color": "#97c2fc", "id": "visual means fitted with means communication radio", "label": "visual means fitted with means communication radio", "shape": "dot"}, {"color": "#97c2fc", "id": "means fitted with means communication radio", "label": "means fitted with means communication radio", "shape": "dot"}, {"color": "#97c2fc", "id": "means fitted with means communication radio with ground", "label": "means fitted with means communication radio with ground", "shape": "dot"}, {"color": "#97c2fc", "id": "such instructions", "label": "such instructions", "shape": "dot"}, {"color": "#97c2fc", "id": "means fitted", "label": "means fitted", "shape": "dot"}, {"color": "#97c2fc", "id": "mean", "label": "mean", "shape": "dot"}, {"color": "#97c2fc", "id": "visual means fitted", "label": "visual means fitted", "shape": "dot"}, {"color": "#97c2fc", "id": "visual means fitted with means communication radio with ground", "label": "visual means fitted with means communication radio with ground", "shape": "dot"}, {"color": "#97c2fc", "id": "regardless whether not air traffic zone exists", "label": "regardless whether not air traffic zone exists", "shape": "dot"}, {"color": "#97c2fc", "id": "during day event failure anti-collision light provided", "label": "during day event failure anti-collision light provided", "shape": "dot"}, {"color": "#97c2fc", "id": "repaired opportunity", "label": "repaired opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "opportunity", "label": "opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "repaired practicable opportunity", "label": "repaired practicable opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "repaired earliest practicable opportunity", "label": "repaired earliest practicable opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "practicable opportunity", "label": "practicable opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "event failure anti-collision light provided", "label": "event failure anti-collision light provided", "shape": "dot"}, {"color": "#97c2fc", "id": "day", "label": "day", "shape": "dot"}, {"color": "#97c2fc", "id": "fly", "label": "fly", "shape": "dot"}, {"color": "#97c2fc", "id": "earliest practicable opportunity", "label": "earliest practicable opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "earliest opportunity", "label": "earliest opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "repaired earliest opportunity", "label": "repaired earliest opportunity", "shape": "dot"}, {"color": "#97c2fc", "id": "two black balls", "label": "two black balls", "shape": "dot"}, {"color": "#97c2fc", "id": "two black balls suspended", "label": "two black balls suspended", "shape": "dot"}, {"color": "#97c2fc", "id": "two balls suspended below control car", "label": "two balls suspended below control car", "shape": "dot"}, {"color": "#97c2fc", "id": "two balls suspended", "label": "two balls suspended", "shape": "dot"}, {"color": "#97c2fc", "id": "two balls", "label": "two balls", "shape": "dot"}, {"color": "#97c2fc", "id": "two black balls suspended below control car", "label": "two black balls suspended below control car", "shape": "dot"}, {"color": "#97c2fc", "id": "airship", "label": "airship", "shape": "dot"}, {"color": "#97c2fc", "id": "except lawful authority", "label": "except lawful authority", "shape": "dot"}, {"color": "#97c2fc", "id": "paragraph cap", "label": "paragraph cap", "shape": "dot"}, {"color": "#97c2fc", "id": "visual holding position", "label": "visual holding position", "shape": "dot"}, {"color": "#97c2fc", "id": "holding position associated", "label": "holding position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "visual position associated", "label": "visual position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "designated visual position associated with runway", "label": "designated visual position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "visual holding position associated", "label": "visual holding position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "position", "label": "position", "shape": "dot"}, {"color": "#97c2fc", "id": "designated holding position associated with runway", "label": "designated holding position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "designated visual position associated", "label": "designated visual position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "position associated", "label": "position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "visual holding position associated with runway", "label": "visual holding position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "designated visual holding position associated with runway", "label": "designated visual holding position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "position associated with runway", "label": "position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "designated visual holding position", "label": "designated visual holding position", "shape": "dot"}, {"color": "#97c2fc", "id": "holding position associated with runway", "label": "holding position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "holding position", "label": "holding position", "shape": "dot"}, {"color": "#97c2fc", "id": "designated holding position associated", "label": "designated holding position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "designated position associated with runway", "label": "designated position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "visual position associated with runway", "label": "visual position associated with runway", "shape": "dot"}, {"color": "#97c2fc", "id": "designated holding position", "label": "designated holding position", "shape": "dot"}, {"color": "#97c2fc", "id": "designated visual holding position associated", "label": "designated visual holding position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "designated visual position", "label": "designated visual position", "shape": "dot"}, {"color": "#97c2fc", "id": "designated position associated", "label": "designated position associated", "shape": "dot"}, {"color": "#97c2fc", "id": "designated position", "label": "designated position", "shape": "dot"}, {"color": "#97c2fc", "id": "visual position", "label": "visual position", "shape": "dot"}, {"color": "#97c2fc", "id": "position other", "label": "position other", "shape": "dot"}, {"color": "#97c2fc", "id": "holding position other than closest", "label": "holding position other than closest", "shape": "dot"}, {"color": "#97c2fc", "id": "holding position other", "label": "holding position other", "shape": "dot"}, {"color": "#97c2fc", "id": "position other than closest", "label": "position other than closest", "shape": "dot"}, {"color": "#97c2fc", "id": "boundary", "label": "boundary", "shape": "dot"}, {"color": "#97c2fc", "id": "runway", "label": "runway", "shape": "dot"}, {"color": "#97c2fc", "id": "taxiway apron", "label": "taxiway apron", "shape": "dot"}, {"color": "#97c2fc", "id": "orange stripes", "label": "orange stripes", "shape": "dot"}, {"color": "#97c2fc", "id": "flags centimetres", "label": "flags centimetres", "shape": "dot"}, {"color": "#97c2fc", "id": "orange stripe", "label": "orange stripe", "shape": "dot"}, {"color": "#97c2fc", "id": "boundary aerodrome", "label": "boundary aerodrome", "shape": "dot"}, {"color": "#97c2fc", "id": "diagram", "label": "diagram", "shape": "dot"}, {"color": "#97c2fc", "id": "more", "label": "more", "shape": "dot"}, {"color": "#97c2fc", "id": "not more than centimetres", "label": "not more than centimetres", "shape": "dot"}, {"color": "#97c2fc", "id": "not more", "label": "not more", "shape": "dot"}, {"color": "#97c2fc", "id": "more than centimetres from top", "label": "more than centimetres from top", "shape": "dot"}, {"color": "#97c2fc", "id": "not more than centimetres from top", "label": "not more than centimetres from top", "shape": "dot"}, {"color": "#97c2fc", "id": "insideand outside aerodrome", "label": "insideand outside aerodrome", "shape": "dot"}, {"color": "#97c2fc", "id": "insideand", "label": "insideand", "shape": "dot"}, {"color": "#97c2fc", "id": "more than centimetres", "label": "more than centimetres", "shape": "dot"}, {"color": "#97c2fc", "id": "paragraphcap", "label": "paragraphcap", "shape": "dot"}, {"color": "#97c2fc", "id": "angle", "label": "angle", "shape": "dot"}, {"color": "#97c2fc", "id": "two arms", "label": "two arms", "shape": "dot"}, {"color": "#97c2fc", "id": "right angles", "label": "right angles", "shape": "dot"}, {"color": "#97c2fc", "id": "right", "label": "right", "shape": "dot"}, {"color": "#97c2fc", "id": "right centre", "label": "right centre", "shape": "dot"}, {"color": "#97c2fc", "id": "airspace classifications", "label": "airspace classifications", "shape": "dot"}, {"color": "#97c2fc", "id": "requirement", "label": "requirement", "shape": "dot"}, {"color": "#97c2fc", "id": "accordance with requirements", "label": "accordance with requirements", "shape": "dot"}, {"color": "#97c2fc", "id": "accordance with instrument flight rulesa", "label": "accordance with instrument flight rulesa", "shape": "dot"}, {"color": "#97c2fc", "id": "instrument flight rulesa", "label": "instrument flight rulesa", "shape": "dot"}, {"color": "#97c2fc", "id": "conditions paragraph", "label": "conditions paragraph", "shape": "dot"}, {"color": "#97c2fc", "id": "section sera.cap", "label": "section sera.cap", "shape": "dot"}, {"color": "#97c2fc", "id": "within airspace paragraphc remain", "label": "within airspace paragraphc remain", "shape": "dot"}, {"color": "#97c2fc", "id": "unless authorised", "label": "unless authorised", "shape": "dot"}, {"color": "#97c2fc", "id": "controlled airspace", "label": "controlled airspace", "shape": "dot"}, {"color": "#97c2fc", "id": "air regulations", "label": "air regulations", "shape": "dot"}, {"color": "#97c2fc", "id": "prescribed", "label": "prescribed", "shape": "dot"}, {"color": "#97c2fc", "id": "dayb", "label": "dayb", "shape": "dot"}, {"color": "#97c2fc", "id": "horizontally cloudand flight visibility", "label": "horizontally cloudand flight visibility", "shape": "dot"}, {"color": "#97c2fc", "id": "vertically cloudand flight visibility", "label": "vertically cloudand flight visibility", "shape": "dot"}, {"color": "#97c2fc", "id": "paragraphc remain", "label": "paragraphc remain", "shape": "dot"}, {"color": "#97c2fc", "id": "cloudand flight visibility", "label": "cloudand flight visibility", "shape": "dot"}, {"color": "#97c2fc", "id": "authorised", "label": "authorised", "shape": "dot"}, {"color": "#97c2fc", "id": "horizontally vertically cloudand flight visibility", "label": "horizontally vertically cloudand flight visibility", "shape": "dot"}, {"color": "#97c2fc", "id": "within controlled airspace paragraphc remain", "label": "within controlled airspace paragraphc remain", "shape": "dot"}, {"color": "#97c2fc", "id": "airspace", "label": "airspace", "shape": "dot"}, {"color": "#97c2fc", "id": "passengers on all flights except holiday charters", "label": "passengers on all flights except holiday charters", "shape": "dot"}, {"color": "#97c2fc", "id": "passengers on holiday charters", "label": "passengers on holiday charters", "shape": "dot"}, {"color": "#97c2fc", "id": "children (between 2\u201312 years) or infants under 2\ryears of age if occupying a separate seat", "label": "children (between 2\u201312 years) or infants under 2\ryears of age if occupying a separate seat", "shape": "dot"}, {"color": "#97c2fc", "id": "infants under 2 years of age if sharing a seat with\ran adult", "label": "infants under 2 years of age if sharing a seat with\ran adult", "shape": "dot"}, {"color": "#97c2fc", "id": "flight crew", "label": "flight crew", "shape": "dot"}, {"color": "#97c2fc", "id": "cabin crew", "label": "cabin crew", "shape": "dot"}, {"color": "#97c2fc", "id": "male passengers", "label": "male passengers", "shape": "dot"}, {"color": "#97c2fc", "id": "female passengers", "label": "female passengers", "shape": "dot"}, {"color": "#97c2fc", "id": "children (between 2-12 years) or infants under 2\ryears of age if occupying a separate seat", "label": "children (between 2-12 years) or infants under 2\ryears of age if occupying a separate seat", "shape": "dot"}, {"color": "#97c2fc", "id": "88kg", "label": "88kg", "shape": "dot"}, {"color": "#97c2fc", "id": "83gk", "label": "83gk", "shape": "dot"}, {"color": "#97c2fc", "id": "35kg", "label": "35kg", "shape": "dot"}, {"color": "#97c2fc", "id": "0kg", "label": "0kg", "shape": "dot"}, {"color": "#97c2fc", "id": "85kg", "label": "85kg", "shape": "dot"}, {"color": "#97c2fc", "id": "75kg", "label": "75kg", "shape": "dot"}, {"color": "#97c2fc", "id": "70kg", "label": "70kg", "shape": "dot"}, {"color": "#97c2fc", "id": "69kg", "label": "69kg", "shape": "dot"}, {"color": "#97c2fc", "id": "84kg", "label": "84kg", "shape": "dot"}, {"color": "#97c2fc", "id": "76kg", "label": "76kg", "shape": "dot"}, {"color": "#97c2fc", "id": "104kg", "label": "104kg", "shape": "dot"}, {"color": "#97c2fc", "id": "86gk", "label": "86gk", "shape": "dot"}, {"color": "#97c2fc", "id": "96kg", "label": "96kg", "shape": "dot"}, {"color": "#97c2fc", "id": "78kg", "label": "78kg", "shape": "dot"}, {"color": "#97c2fc", "id": "92kg", "label": "92kg", "shape": "dot"}, {"color": "#97c2fc", "id": "74kg", "label": "74kg", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "rules anti-collision light", "title": "means {_titleindx_1}", "to": "relation rotorcraft flashing"}, {"arrows": "to", "from": "interpretation", "title": "means {_titleindx_1}", "to": "relation rotorcraft"}, {"arrows": "to", "from": "rules anti-collision light", "title": "means {_titleindx_1}", "to": "relation rotorcraft"}, {"arrows": "to", "from": "interpretation", "title": "means {_titleindx_1}", "to": "relation rotorcraft flashing"}, {"arrows": "to", "from": "air regulationa", "title": "have {_titleindx_1}", "to": "meaning asgiven"}, {"arrows": "to", "from": "subject paragraph terms", "title": "used {_titleindx_1}", "to": "rule"}, {"arrows": "to", "from": "air regulationa", "title": "have {_titleindx_1}", "to": "same meaning asgiven"}, {"arrows": "to", "from": "term aerodrome traffic zone", "title": "has {_titleindx_1}", "to": "same meaning"}, {"arrows": "to", "from": "term aerodrome traffic zone", "title": "has {_titleindx_1}", "to": "meaning"}, {"arrows": "to", "from": "term aerodrome traffic zone", "title": "has {_titleindx_1}", "to": "same meaning given article theair navigation order references"}, {"arrows": "to", "from": "term aerodrome traffic zone", "title": "has {_titleindx_1}", "to": "same meaning given article navigation order references"}, {"arrows": "to", "from": "number", "title": "refer {_titleindx_1}", "to": "provision withthe"}, {"arrows": "to", "from": "term aerodrome traffic zone", "title": "has {_titleindx_1}", "to": "meaning given article navigation order references"}, {"arrows": "to", "from": "term aerodrome traffic zone", "title": "has {_titleindx_1}", "to": "meaning given article theair navigation order references"}, {"arrows": "to", "from": "they", "title": "apply {_titleindx_2}", "to": "aircraft"}, {"arrows": "to", "from": "aircraft", "title": "registered {_titleindx_2}", "to": "united kingdom"}, {"arrows": "to", "from": "they", "title": "may bed.a {_titleindx_2}", "to": "commission regulation"}, {"arrows": "to", "from": "they", "title": "apply aircraft within {_titleindx_2}", "to": "united kingdom andb"}, {"arrows": "to", "from": "they", "title": "may bed.a {_titleindx_2}", "to": "commission implementing regulation"}, {"arrows": "to", "from": "rule", "title": "amending regulation andeu {_titleindx_2}", "to": "o.j. no.l"}, {"arrows": "to", "from": "common rules", "title": "amending regulation andeu {_titleindx_2}", "to": "o.j. no.l"}, {"arrows": "to", "from": "rule", "title": "amending andeu {_titleindx_2}", "to": "o.j. no.l"}, {"arrows": "to", "from": "common rules", "title": "amending andeu {_titleindx_2}", "to": "o.j. no.l"}, {"arrows": "to", "from": "air tobe", "title": "complying with {_titleindx_2}", "to": "law anycountry"}, {"arrows": "to", "from": "term sera", "title": "means {_titleindx_2}", "to": "annex"}, {"arrows": "to", "from": "air tobe", "title": "complying with {_titleindx_2}", "to": "law anycountry other"}, {"arrows": "to", "from": "air tobe", "title": "lawful departed for {_titleindx_2}", "to": "rule"}, {"arrows": "to", "from": "air tobe", "title": "departed for {_titleindx_2}", "to": "rule"}, {"arrows": "to", "from": "air tobe", "title": "complying with {_titleindx_2}", "to": "law anycountry other than united kingdom"}, {"arrows": "to", "from": "nothing", "title": "applies {_titleindx_2}", "to": "military aircraft"}, {"arrows": "to", "from": "nothing", "title": "applies aircraft apart from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "order", "title": "applies apart {_titleindx_2}", "to": "aircraft"}, {"arrows": "to", "from": "nothing", "title": "applies apart {_titleindx_2}", "to": "military aircraft"}, {"arrows": "to", "from": "order", "title": "applies from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "nothing", "title": "applies from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "order", "title": "applies apart {_titleindx_2}", "to": "military aircraft"}, {"arrows": "to", "from": "nothing", "title": "applies {_titleindx_2}", "to": "aircraft"}, {"arrows": "to", "from": "order", "title": "applies aircraft from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "order", "title": "applies {_titleindx_2}", "to": "aircraft"}, {"arrows": "to", "from": "order", "title": "applies aircraft apart from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "order", "title": "applies {_titleindx_2}", "to": "military aircraft"}, {"arrows": "to", "from": "nothing", "title": "applies apart from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "nothing", "title": "applies apart {_titleindx_2}", "to": "aircraft"}, {"arrows": "to", "from": "nothing", "title": "applies aircraft from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "order", "title": "applies apart from {_titleindx_2}", "to": "certaincap"}, {"arrows": "to", "from": "respect classes aircraft", "title": "respect {_titleindx_3}", "to": "person vehicle andb subject"}, {"arrows": "to", "from": "rule", "title": "provision for {_titleindx_3}", "to": "permission granted for purposes rule"}, {"arrows": "to", "from": "rule", "title": "provision for {_titleindx_3}", "to": "permission"}, {"arrows": "to", "from": "respect classes aircraft", "title": "respect {_titleindx_3}", "to": "aircraft"}, {"arrows": "to", "from": "respect classes aircraft", "title": "generally respect {_titleindx_3}", "to": "aircraft"}, {"arrows": "to", "from": "rule", "title": "provision for {_titleindx_3}", "to": "permission granted"}, {"arrows": "to", "from": "respect classes aircraft", "title": "generally respect {_titleindx_3}", "to": "person vehicle andb subject"}, {"arrows": "to", "from": "city", "title": "orb within {_titleindx_4}", "to": "notified controlled airspacea other"}, {"arrows": "to", "from": "aerodrome accordance", "title": "is with {_titleindx_5}", "to": "procedure"}, {"arrows": "to", "from": "accordance", "title": "is with {_titleindx_5}", "to": "permission ofthe caa"}, {"arrows": "to", "from": "aerodrome accordance", "title": "except city is {_titleindx_5}", "to": "town settlement"}, {"arrows": "to", "from": "aerodrome accordance", "title": "is with {_titleindx_5}", "to": "procedure"}, {"arrows": "to", "from": "open air assembly", "title": "notified within {_titleindx_5}", "to": "metre"}, {"arrows": "to", "from": "air assembly", "title": "notified within {_titleindx_5}", "to": "metre"}, {"arrows": "to", "from": "land accordance", "title": "is with {_titleindx_6}", "to": "normal aviation practice"}, {"arrows": "to", "from": "united kingdom", "title": "notified {_titleindx_6}", "to": "aeronautical information publication"}, {"arrows": "to", "from": "classification airspace", "title": "notified {_titleindx_6}", "to": "aeronautical information publication"}, {"arrows": "to", "from": "banners similar articles", "title": "towed except {_titleindx_7}", "to": "accordance arrangements made air traffic control unit"}, {"arrows": "to", "from": "banners similar articles", "title": "towed except {_titleindx_7}", "to": "accordance"}, {"arrows": "to", "from": "banners similar articles", "title": "towed except {_titleindx_7}", "to": "accordance arrangements made"}, {"arrows": "to", "from": "accordance", "title": "is with {_titleindx_7}", "to": "arrangements made with air traffic control unit"}, {"arrows": "to", "from": "banners similar articles", "title": "towed except {_titleindx_7}", "to": "accordance arrangements"}, {"arrows": "to", "from": "towing", "title": "are {_titleindx_8}", "to": "considered"}, {"arrows": "to", "from": "towing", "title": "are considered aircraft under {_titleindx_8}", "to": "command"}, {"arrows": "to", "from": "towing", "title": "are considered {_titleindx_8}", "to": "single aircraft"}, {"arrows": "to", "from": "towing", "title": "are considered under {_titleindx_8}", "to": "command"}, {"arrows": "to", "from": "towing", "title": "are considered {_titleindx_8}", "to": "aircraft"}, {"arrows": "to", "from": "aircraft", "title": "must approach {_titleindx_9}", "to": "land order"}, {"arrows": "to", "from": "air traffic control unit", "title": "has communicated aircraft order priority for {_titleindx_9}", "to": "landing"}, {"arrows": "to", "from": "air traffic control unit", "title": "has communicated {_titleindx_9}", "to": "aircraft order priority"}, {"arrows": "to", "from": "flying machine glider", "title": "leave {_titleindx_10}", "to": "clear"}, {"arrows": "to", "from": "machine glider", "title": "leave {_titleindx_10}", "to": "clear"}, {"arrows": "to", "from": "subject paragraph machine", "title": "must move landing area after {_titleindx_10}", "to": "landing"}, {"arrows": "to", "from": "subject paragraph flying machine", "title": "must move {_titleindx_10}", "to": "clear landing area"}, {"arrows": "to", "from": "subject paragraph machine", "title": "must move {_titleindx_10}", "to": "landing area"}, {"arrows": "to", "from": "subject paragraph machine", "title": "must move {_titleindx_10}", "to": "possible"}, {"arrows": "to", "from": "subject paragraph flying machine", "title": "must move landing area after {_titleindx_10}", "to": "landing"}, {"arrows": "to", "from": "subject paragraph flying machine", "title": "must move after {_titleindx_10}", "to": "landing"}, {"arrows": "to", "from": "subject paragraph machine", "title": "must move {_titleindx_10}", "to": "soon possible"}, {"arrows": "to", "from": "subject paragraph flying machine", "title": "must move {_titleindx_10}", "to": "soon possible"}, {"arrows": "to", "from": "subject paragraph flying machine", "title": "must move {_titleindx_10}", "to": "possible"}, {"arrows": "to", "from": "subject paragraph machine", "title": "must move after {_titleindx_10}", "to": "landing"}, {"arrows": "to", "from": "subject paragraph flying machine", "title": "must move {_titleindx_10}", "to": "landing area"}, {"arrows": "to", "from": "subject paragraph machine", "title": "must move {_titleindx_10}", "to": "clear landing area"}, {"arrows": "to", "from": "such aerodromes", "title": "are {_titleindx_11}", "to": "notified"}, {"arrows": "to", "from": "time", "title": "are specified at_time {_titleindx_11}", "to": "table"}, {"arrows": "to", "from": "such aerodromes", "title": "are notified {_titleindx_11}", "to": "rule"}, {"arrows": "to", "from": "such times", "title": "are specified column at_time {_titleindx_11}", "to": "table"}, {"arrows": "to", "from": "time", "title": "are specified column at_time {_titleindx_11}", "to": "table"}, {"arrows": "to", "from": "aerodrome", "title": "are notified rule for {_titleindx_11}", "to": "purpose"}, {"arrows": "to", "from": "aerodrome", "title": "are notified {_titleindx_11}", "to": "rule"}, {"arrows": "to", "from": "such aerodromes", "title": "are notified rule for {_titleindx_11}", "to": "purpose"}, {"arrows": "to", "from": "such aerodromes", "title": "are notified for {_titleindx_11}", "to": "purpose"}, {"arrows": "to", "from": "aerodrome", "title": "are {_titleindx_11}", "to": "notified"}, {"arrows": "to", "from": "aerodrome", "title": "are notified for {_titleindx_11}", "to": "purpose"}, {"arrows": "to", "from": "such times", "title": "are specified at_time {_titleindx_11}", "to": "table"}, {"arrows": "to", "from": "time", "title": "are {_titleindx_11}", "to": "notified"}, {"arrows": "to", "from": "such times", "title": "are {_titleindx_11}", "to": "notified"}, {"arrows": "to", "from": "aerodrome unit flight information service", "title": "having during {_titleindx_11}", "to": "notified hours"}, {"arrows": "to", "from": "aerodrome unit flight information service", "title": "having during {_titleindx_11}", "to": "hour"}, {"arrows": "to", "from": "aerodrome unit flight information service", "title": "having air traffic during {_titleindx_11}", "to": "hour"}, {"arrows": "to", "from": "aerodrome", "title": "control {_titleindx_11}", "to": "unit flight information service"}, {"arrows": "to", "from": "aerodrome unit flight information service", "title": "having {_titleindx_11}", "to": "air traffic"}, {"arrows": "to", "from": "aerodrome unit flight information service", "title": "having air traffic during {_titleindx_11}", "to": "notified hours"}, {"arrows": "to", "from": "aerodrome", "title": "watch {_titleindx_11}", "to": "airground airground communications service unit communications service unit"}, {"arrows": "to", "from": "aircraft", "title": "has complied with {_titleindx_11}", "to": "paragraphs appropriate"}, {"arrows": "to", "from": "aircraft", "title": "has complied with {_titleindx_11}", "to": "paragraph"}, {"arrows": "to", "from": "commander", "title": "has complied with {_titleindx_11}", "to": "paragraph"}, {"arrows": "to", "from": "commander", "title": "has complied with {_titleindx_11}", "to": "paragraphs appropriate"}, {"arrows": "to", "from": "unit", "title": "enable {_titleindx_11}", "to": "flight conducted within aerodrome traffic zone"}, {"arrows": "to", "from": "air traffic control unit", "title": "obtain {_titleindx_11}", "to": "permission"}, {"arrows": "to", "from": "commander", "title": "obtain {_titleindx_11}", "to": "permission"}, {"arrows": "to", "from": "unit", "title": "enable {_titleindx_11}", "to": "flight conducted safely within aerodrome traffic zone"}, {"arrows": "to", "from": "unit", "title": "enable {_titleindx_11}", "to": "flight conducted"}, {"arrows": "to", "from": "unit", "title": "enable {_titleindx_11}", "to": "flight conducted safely"}, {"arrows": "to", "from": "unit", "title": "enable {_titleindx_11}", "to": "flight"}, {"arrows": "to", "from": "information", "title": "enable {_titleindx_11}", "to": "flight"}, {"arrows": "to", "from": "information", "title": "enable {_titleindx_11}", "to": "flight conducted"}, {"arrows": "to", "from": "flight", "title": "information from {_titleindx_11}", "to": "flight information centre"}, {"arrows": "to", "from": "information", "title": "enable {_titleindx_11}", "to": "flight conducted safely"}, {"arrows": "to", "from": "information", "title": "enable {_titleindx_11}", "to": "flight conducted safely within aerodrome traffic zone"}, {"arrows": "to", "from": "information", "title": "enable {_titleindx_11}", "to": "flight conducted within aerodrome traffic zone"}, {"arrows": "to", "from": "aerodrome", "title": "must obtain at_time {_titleindx_11}", "to": "flight information centre"}, {"arrows": "to", "from": "aerodrome", "title": "must obtain information at_time {_titleindx_11}", "to": "flight information centre"}, {"arrows": "to", "from": "aerodrome", "title": "must obtain at_time {_titleindx_11}", "to": "there flight information centre"}, {"arrows": "to", "from": "aerodrome", "title": "must obtain information at_time {_titleindx_11}", "to": "there flight information centre"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "visual means"}, {"arrows": "to", "from": "watch", "title": "kept for {_titleindx_11}", "to": "instruction"}, {"arrows": "to", "from": "radio frequency", "title": "notified {_titleindx_11}", "to": "aerodrome"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "visual means fitted with ground"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "means fitted with ground"}, {"arrows": "to", "from": "appropriate radio frequency", "title": "notified for {_titleindx_11}", "to": "communication"}, {"arrows": "to", "from": "appropriate radio frequency", "title": "notified aerodrome for {_titleindx_11}", "to": "communication"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "visual means fitted with means communication radio"}, {"arrows": "to", "from": "radio frequency", "title": "notified aerodrome for {_titleindx_11}", "to": "communication"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "means fitted with means communication radio"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "means fitted with means communication radio with ground"}, {"arrows": "to", "from": "watch", "title": "kept for {_titleindx_11}", "to": "such instructions"}, {"arrows": "to", "from": "appropriate radio frequency", "title": "notified {_titleindx_11}", "to": "aerodrome"}, {"arrows": "to", "from": "radio frequency", "title": "notified for {_titleindx_11}", "to": "communication"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "means fitted"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "mean"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "visual means fitted"}, {"arrows": "to", "from": "watch kept", "title": "may issued {_titleindx_11}", "to": "visual means fitted with means communication radio with ground"}, {"arrows": "to", "from": "aerodrome", "title": "means at_time {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "aerodrome", "title": "cap {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "aerodrome", "title": "means aerodrome at_time {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "uncontrolled aerodrome", "title": "means aerodrome at_time {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "air trafficcontrol service", "title": "provided aerodrome traffic {_titleindx_12}", "to": "regardless whether not air traffic zone exists"}, {"arrows": "to", "from": "cap", "title": "means at_time {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "uncontrolled aerodrome", "title": "means at_time {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "cap", "title": "means aerodrome at_time {_titleindx_12}", "to": "rule"}, {"arrows": "to", "from": "air trafficcontrol service", "title": "provided {_titleindx_12}", "to": "regardless whether not air traffic zone exists"}, {"arrows": "to", "from": "done accordance", "title": "is with {_titleindx_14}", "to": "procedure"}, {"arrows": "to", "from": "light required", "title": "displayed {_titleindx_15}", "to": "serum"}, {"arrows": "to", "from": "aircraft", "title": "may continue {_titleindx_15}", "to": "during day event failure anti-collision light provided"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "repaired opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "repaired practicable opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "repaired earliest practicable opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "practicable opportunity"}, {"arrows": "to", "from": "aircraft", "title": "may continue {_titleindx_15}", "to": "event failure anti-collision light provided"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided opportunity during {_titleindx_15}", "to": "day"}, {"arrows": "to", "from": "aircraft", "title": "may continue {_titleindx_15}", "to": "fly"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "earliest practicable opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "earliest opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided {_titleindx_15}", "to": "repaired earliest opportunity"}, {"arrows": "to", "from": "event failure anti-collision light", "title": "provided during {_titleindx_15}", "to": "day"}, {"arrows": "to", "from": "circumstance", "title": "display {_titleindx_16}", "to": "two black balls"}, {"arrows": "to", "from": "circumstance", "title": "referred {_titleindx_16}", "to": "paragraph"}, {"arrows": "to", "from": "circumstance", "title": "referred paragraph during {_titleindx_16}", "to": "day"}, {"arrows": "to", "from": "circumstance", "title": "display {_titleindx_16}", "to": "two black balls suspended"}, {"arrows": "to", "from": "circumstance", "title": "display {_titleindx_16}", "to": "two balls suspended below control car"}, {"arrows": "to", "from": "circumstance", "title": "display {_titleindx_16}", "to": "two balls suspended"}, {"arrows": "to", "from": "circumstance", "title": "referred during {_titleindx_16}", "to": "day"}, {"arrows": "to", "from": "circumstance", "title": "display {_titleindx_16}", "to": "two balls"}, {"arrows": "to", "from": "circumstance", "title": "display {_titleindx_16}", "to": "two black balls suspended below control car"}, {"arrows": "to", "from": "circumstance", "title": "are thata {_titleindx_16}", "to": "airship"}, {"arrows": "to", "from": "serum", "title": "is with {_titleindx_18}", "to": "except lawful authority"}, {"arrows": "to", "from": "subject paragraph yellow broken lines", "title": "illustrated at_time {_titleindx_19}", "to": "paragraph cap"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "visual holding position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "holding position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "visual position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated visual position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "visual holding position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated holding position associated with runway"}, {"arrows": "to", "from": "subject paragraph two yellow broken lines", "title": "illustrated at_time {_titleindx_19}", "to": "paragraph cap"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated visual position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "visual holding position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated visual holding position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated visual holding position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "holding position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "holding position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated holding position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "visual position associated with runway"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated holding position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated visual holding position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated visual position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated position associated"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "designated position"}, {"arrows": "to", "from": "rule", "title": "signify {_titleindx_19}", "to": "visual position"}, {"arrows": "to", "from": "rule", "title": "signifies {_titleindx_19}", "to": "holding position"}, {"arrows": "to", "from": "subject paragraph", "title": "illustrated diagrams at_time {_titleindx_19}", "to": "paragraph cap"}, {"arrows": "to", "from": "rule", "title": "signifies {_titleindx_19}", "to": "position other"}, {"arrows": "to", "from": "rule", "title": "signifies {_titleindx_19}", "to": "position"}, {"arrows": "to", "from": "subject paragraph", "title": "illustrated at_time {_titleindx_19}", "to": "paragraph cap"}, {"arrows": "to", "from": "rule", "title": "signifies {_titleindx_19}", "to": "holding position other than closest"}, {"arrows": "to", "from": "rule", "title": "signifies {_titleindx_19}", "to": "holding position other"}, {"arrows": "to", "from": "rule", "title": "signifies {_titleindx_19}", "to": "position other than closest"}, {"arrows": "to", "from": "paragraph", "title": "signify {_titleindx_19}", "to": "boundary"}, {"arrows": "to", "from": "part", "title": "paved {_titleindx_19}", "to": "runway"}, {"arrows": "to", "from": "part", "title": "paved {_titleindx_19}", "to": "taxiway apron"}, {"arrows": "to", "from": "marker", "title": "is with {_titleindx_20}", "to": "orange stripes"}, {"arrows": "to", "from": "markers equal width centimetres", "title": "alternating with {_titleindx_20}", "to": "flags centimetres"}, {"arrows": "to", "from": "markers equal width centimetres", "title": "alternating square with {_titleindx_20}", "to": "flags centimetres"}, {"arrows": "to", "from": "markers width centimetres", "title": "alternating with {_titleindx_20}", "to": "flags centimetres"}, {"arrows": "to", "from": "markers equal width centimetres", "title": "is with {_titleindx_20}", "to": "orange stripe"}, {"arrows": "to", "from": "markers width centimetres", "title": "alternating square with {_titleindx_20}", "to": "flags centimetres"}, {"arrows": "to", "from": "marker", "title": "indicate {_titleindx_20}", "to": "boundary aerodrome"}, {"arrows": "to", "from": "striped markers", "title": "indicate {_titleindx_20}", "to": "boundary aerodrome"}, {"arrows": "to", "from": "paragraph", "title": "indicate {_titleindx_20}", "to": "boundary aerodrome"}, {"arrows": "to", "from": "stripe", "title": "is with {_titleindx_20}", "to": "orange stripe"}, {"arrows": "to", "from": "structures markers", "title": "is with {_titleindx_20}", "to": "stripe"}, {"arrows": "to", "from": "structures markers", "title": "illustrated {_titleindx_20}", "to": "diagram"}, {"arrows": "to", "from": "pattern must visible", "title": "must affixed {_titleindx_20}", "to": "more"}, {"arrows": "to", "from": "pattern must visible", "title": "must affixed {_titleindx_20}", "to": "not more than centimetres"}, {"arrows": "to", "from": "pattern must visible", "title": "must affixed {_titleindx_20}", "to": "not more"}, {"arrows": "to", "from": "pattern must visible", "title": "must affixed {_titleindx_20}", "to": "more than centimetres from top"}, {"arrows": "to", "from": "pattern must visible", "title": "must affixed {_titleindx_20}", "to": "not more than centimetres from top"}, {"arrows": "to", "from": "pattern", "title": "must visible from {_titleindx_20}", "to": "insideand outside aerodrome"}, {"arrows": "to", "from": "pattern", "title": "must visible from {_titleindx_20}", "to": "insideand"}, {"arrows": "to", "from": "pattern must visible", "title": "must affixed {_titleindx_20}", "to": "more than centimetres"}, {"arrows": "to", "from": "intervals metres", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "white flush", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "white", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "white flat", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "white flat flush", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "intervals notexceeding metres", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "metre", "title": "indicate {_titleindx_20}", "to": "boundary"}, {"arrows": "to", "from": "rule", "title": "indicates area at_time {_titleindx_20}", "to": "paragraphcap"}, {"arrows": "to", "from": "white letter", "title": "illustrated {_titleindx_20}", "to": "diagram"}, {"arrows": "to", "from": "rule", "title": "indicates at_time {_titleindx_20}", "to": "paragraphcap"}, {"arrows": "to", "from": "letter", "title": "illustrated {_titleindx_20}", "to": "diagram"}, {"arrows": "to", "from": "metre", "title": "long metre wide {_titleindx_20}", "to": "angle"}, {"arrows": "to", "from": "metre", "title": "metre {_titleindx_20}", "to": "angle"}, {"arrows": "to", "from": "yellow cross", "title": "is with {_titleindx_20}", "to": "two arms"}, {"arrows": "to", "from": "metre", "title": "long metre {_titleindx_20}", "to": "right angles"}, {"arrows": "to", "from": "metre", "title": "long metre wide {_titleindx_20}", "to": "right angles"}, {"arrows": "to", "from": "metre", "title": "metre wide {_titleindx_20}", "to": "right angles"}, {"arrows": "to", "from": "banner", "title": "towed {_titleindx_20}", "to": "aircraft"}, {"arrows": "to", "from": "metre", "title": "long metre {_titleindx_20}", "to": "angle"}, {"arrows": "to", "from": "article", "title": "towed {_titleindx_20}", "to": "aircraft"}, {"arrows": "to", "from": "tow ropes", "title": "towed {_titleindx_20}", "to": "aircraft"}, {"arrows": "to", "from": "metre", "title": "metre wide {_titleindx_20}", "to": "angle"}, {"arrows": "to", "from": "metre", "title": "cross with {_titleindx_20}", "to": "two arms"}, {"arrows": "to", "from": "similar articles", "title": "towed {_titleindx_20}", "to": "aircraft"}, {"arrows": "to", "from": "metre", "title": "yellow cross with {_titleindx_20}", "to": "two arms"}, {"arrows": "to", "from": "metre", "title": "metre {_titleindx_20}", "to": "right angles"}, {"arrows": "to", "from": "letter", "title": "specified {_titleindx_20}", "to": "serum"}, {"arrows": "to", "from": "white letter", "title": "specified {_titleindx_20}", "to": "serum"}, {"arrows": "to", "from": "centre", "title": "black {_titleindx_21}", "to": "right"}, {"arrows": "to", "from": "centre", "title": "black {_titleindx_21}", "to": "centre"}, {"arrows": "to", "from": "centre", "title": "black {_titleindx_21}", "to": "centre"}, {"arrows": "to", "from": "centre", "title": "black {_titleindx_21}", "to": "right centre"}, {"arrows": "to", "from": "aircraft", "title": "must flown {_titleindx_22}", "to": "accordance"}, {"arrows": "to", "from": "accordance", "title": "is with {_titleindx_22}", "to": "airspace classifications"}, {"arrows": "to", "from": "accordance", "title": "is with {_titleindx_22}", "to": "requirement"}, {"arrows": "to", "from": "aircraft", "title": "must flown {_titleindx_22}", "to": "accordance with requirements"}, {"arrows": "to", "from": "subject paragraph aircraft", "title": "must flown {_titleindx_23}", "to": "accordance"}, {"arrows": "to", "from": "subject paragraph aircraft", "title": "must flown {_titleindx_23}", "to": "accordance with instrument flight rulesa"}, {"arrows": "to", "from": "accordance", "title": "is with {_titleindx_23}", "to": "instrument flight rulesa"}, {"arrows": "to", "from": "unit", "title": "complies with {_titleindx_25}", "to": "conditions paragraph"}, {"arrows": "to", "from": "instrument flight rules", "title": "are prescribed {_titleindx_25}", "to": "section sera.cap"}, {"arrows": "to", "from": "aircraft musta", "title": "fly {_titleindx_25}", "to": "within airspace paragraphc remain"}, {"arrows": "to", "from": "unit", "title": "been {_titleindx_25}", "to": "unless authorised"}, {"arrows": "to", "from": "paragraphc", "title": "remain within {_titleindx_25}", "to": "controlled airspace"}, {"arrows": "to", "from": "unit.a instrument flight rules", "title": "are prescribed {_titleindx_25}", "to": "air regulations"}, {"arrows": "to", "from": "unit.a instrument flight rules", "title": "are {_titleindx_25}", "to": "prescribed"}, {"arrows": "to", "from": "aircraft musta", "title": "only fly during {_titleindx_25}", "to": "dayb"}, {"arrows": "to", "from": "paragraphc", "title": "metres away {_titleindx_25}", "to": "horizontally cloudand flight visibility"}, {"arrows": "to", "from": "paragraphc", "title": "least metres away {_titleindx_25}", "to": "vertically cloudand flight visibility"}, {"arrows": "to", "from": "aircraft musta", "title": "only fly {_titleindx_25}", "to": "paragraphc remain"}, {"arrows": "to", "from": "paragraphc", "title": "least metres away {_titleindx_25}", "to": "cloudand flight visibility"}, {"arrows": "to", "from": "unit", "title": "been {_titleindx_25}", "to": "authorised"}, {"arrows": "to", "from": "paragraphc", "title": "least metres away {_titleindx_25}", "to": "horizontally vertically cloudand flight visibility"}, {"arrows": "to", "from": "aircraft musta", "title": "only fly {_titleindx_25}", "to": "within controlled airspace paragraphc remain"}, {"arrows": "to", "from": "paragraphc", "title": "metres away {_titleindx_25}", "to": "cloudand flight visibility"}, {"arrows": "to", "from": "paragraphc", "title": "metres away {_titleindx_25}", "to": "horizontally vertically cloudand flight visibility"}, {"arrows": "to", "from": "paragraphc", "title": "metres away {_titleindx_25}", "to": "vertically cloudand flight visibility"}, {"arrows": "to", "from": "instrument flight rules", "title": "are prescribed {_titleindx_25}", "to": "air regulations"}, {"arrows": "to", "from": "paragraphc", "title": "remain {_titleindx_25}", "to": "metre"}, {"arrows": "to", "from": "aircraft musta", "title": "fly {_titleindx_25}", "to": "paragraphc remain"}, {"arrows": "to", "from": "aircraft musta", "title": "fly {_titleindx_25}", "to": "within controlled airspace paragraphc remain"}, {"arrows": "to", "from": "aircraft musta", "title": "only fly {_titleindx_25}", "to": "within airspace paragraphc remain"}, {"arrows": "to", "from": "aircraft musta", "title": "fly during {_titleindx_25}", "to": "dayb"}, {"arrows": "to", "from": "unit.a instrument flight rules", "title": "are prescribed {_titleindx_25}", "to": "section sera.cap"}, {"arrows": "to", "from": "paragraphc", "title": "remain within {_titleindx_25}", "to": "airspace"}, {"arrows": "to", "from": "paragraphc", "title": "least metres away {_titleindx_25}", "to": "horizontally cloudand flight visibility"}, {"arrows": "to", "from": "paragraphc", "title": "notified for {_titleindx_25}", "to": "purpose"}, {"arrows": "to", "from": "instrument flight rules", "title": "are {_titleindx_25}", "to": "prescribed"}, {"arrows": "to", "from": "passengers on all flights except holiday charters", "title": "male", "to": "88kg"}, {"arrows": "to", "from": "passengers on holiday charters", "title": "male", "to": "83gk"}, {"arrows": "to", "from": "children (between 2\u201312 years) or infants under 2\ryears of age if occupying a separate seat", "title": "male", "to": "35kg"}, {"arrows": "to", "from": "infants under 2 years of age if sharing a seat with\ran adult", "title": "male", "to": "0kg"}, {"arrows": "to", "from": "flight crew", "title": "male", "to": "85kg"}, {"arrows": "to", "from": "cabin crew", "title": "male", "to": "75kg"}, {"arrows": "to", "from": "passengers on all flights except holiday charters", "title": "female", "to": "70kg"}, {"arrows": "to", "from": "passengers on holiday charters", "title": "female", "to": "69kg"}, {"arrows": "to", "from": "children (between 2\u201312 years) or infants under 2\ryears of age if occupying a separate seat", "title": "female", "to": "35kg"}, {"arrows": "to", "from": "infants under 2 years of age if sharing a seat with\ran adult", "title": "female", "to": "0kg"}, {"arrows": "to", "from": "flight crew", "title": "female", "to": "85kg"}, {"arrows": "to", "from": "cabin crew", "title": "female", "to": "75kg"}, {"arrows": "to", "from": "passengers on all flights except holiday charters", "title": "all adult", "to": "84kg"}, {"arrows": "to", "from": "passengers on holiday charters", "title": "all adult", "to": "76kg"}, {"arrows": "to", "from": "male passengers", "title": "1\u20145", "to": "104kg"}, {"arrows": "to", "from": "female passengers", "title": "1\u20145", "to": "86gk"}, {"arrows": "to", "from": "children (between 2-12 years) or infants under 2\ryears of age if occupying a separate seat", "title": "1\u20145", "to": "35kg"}, {"arrows": "to", "from": "infants under 2 years of age if sharing a seat with\ran adult", "title": "1\u20145", "to": "0kg"}, {"arrows": "to", "from": "flight crew", "title": "1\u20145", "to": "85kg"}, {"arrows": "to", "from": "cabin crew", "title": "1\u20145", "to": "75kg"}, {"arrows": "to", "from": "male passengers", "title": "6\u20149", "to": "96kg"}, {"arrows": "to", "from": "female passengers", "title": "6\u20149", "to": "78kg"}, {"arrows": "to", "from": "children (between 2-12 years) or infants under 2\ryears of age if occupying a separate seat", "title": "6\u20149", "to": "35kg"}, {"arrows": "to", "from": "infants under 2 years of age if sharing a seat with\ran adult", "title": "6\u20149", "to": "0kg"}, {"arrows": "to", "from": "flight crew", "title": "6\u20149", "to": "85kg"}, {"arrows": "to", "from": "cabin crew", "title": "6\u20149", "to": "75kg"}, {"arrows": "to", "from": "male passengers", "title": "10\u201419", "to": "92kg"}, {"arrows": "to", "from": "female passengers", "title": "10\u201419", "to": "74kg"}, {"arrows": "to", "from": "children (between 2-12 years) or infants under 2\ryears of age if occupying a separate seat", "title": "10\u201419", "to": "35kg"}, {"arrows": "to", "from": "infants under 2 years of age if sharing a seat with\ran adult", "title": "10\u201419", "to": "0kg"}, {"arrows": "to", "from": "flight crew", "title": "10\u201419", "to": "85kg"}, {"arrows": "to", "from": "cabin crew", "title": "10\u201419", "to": "75kg"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

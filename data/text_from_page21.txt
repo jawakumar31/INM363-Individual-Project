@@ -1,0 +1,23 @@
+CAP 393
+Section 2: The Rules of the Air Regulations 2015
+(a) April 2015
+The instrument flight rules are prescribed by Section 5 of SERA.
+(a) in Class C airspace above flight level 195; or
+(b) along a Class C ATS route at any level,
+must be flown in accordance with the instrument flight rules(a).
+(2) Paragraph (1) does not apply to an aircraft which is flying in accordance with a permission issued by the CAA.
+(3) In this Rule “Class C ATS route” means a route notified as such.
+Use of radio navigation aids
+24.—(1) Subject to paragraph (2), the commander of an aircraft must not make use of a radio navigation aid without complying with such restrictions and procedures as may be notified in relation to that aid.
+(2) The commander of an aircraft is not required to comply with this rule if—
+(a) the aircraft is required to comply with an air traffic control clearance issued for the flight; or
+(b) the commander is otherwise authorised by an air traffic control unit.
+Air traffic control clearance for flights by aircraft without radio equipment
+25.—(1) An aircraft without radio equipment must not fly in Class B, Class C or Class D airspace during the notified hours of watch of the appropriate air traffic control unit unless it has been authorised to do so by that unit and complies with the conditions in paragraph (3).
+(2) An aircraft without radio equipment and flown in accordance with the instrument flight rules must not fly in Class E airspace during the notified hours of watch of that unit unless it has been authorised to do so by the unit and complies with the conditions in paragraph (3).
+(3) The conditions are that the aircraft must—
+(a) only fly during the day;
+(b) only fly within controlled airspace notified for the purpose of this paragraph;
+(c) remain at least 1,500 metres horizontally and 1,000 feet vertically away from cloud and in a flight visibility of at least 5 km; and
+(d) comply with any conditions or requirements specified by the appropriate air traffic control unit.
+Page 15

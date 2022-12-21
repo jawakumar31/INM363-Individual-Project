@@ -1,0 +1,19 @@
+CAP 393
+Section 3: The Air Navigation (General) Regulations 2006
+that may be required for landing because of the forecast wind conditions at the aerodrome of intended destination or any alternate aerodrome.
+(20) If an alternate aerodrome is designated in the flight plan, the specified landing distance required may be that appropriate to that alternate aerodrome when assessing the ability of the aeroplane to satisfy sub-paragraph (19) at the aerodrome of intended destination.
+(21) For the purposes of sub-paragraphs (19) and (20) the specified landing distance required shall be that specified as being appropriate to:
+(a) the landing weight;
+(b) the altitude of the aerodrome;
+(c) the temperature in the specified international standard atmosphere appropriate to the altitude at the aerodrome;
+(d) a level surface in the case of runways usable in both direction; or the average slope of the runway in the case of runways usable in only one direction; and
+(e) still air conditions in the case of the most suitable runway for a landing in still air conditions and not more than 50 per cent. of the forecast wind component opposite to the direction of landing or not less than 150 per cent. of the forecast wind component in the direction of landing in the case of the runway that may be required for landing because of the forecast wind conditions.
+Weight and performance of public transport aeroplanes specified as
+aeroplanes of performance group C
+(1) For the purposes of article 44(6), an aeroplane registered in the United Kingdom in respect of which there is in force under article 44(5) a permission specifying the aeroplane as being of performance group C shall not fly for the purpose of public transport unless the weight of the aeroplane at the commencement of the take-off run is such that the requirements of subparagraphs (2), (3), (4), (8), (12), (14), (15) or, as an alternative to sub- paragraph (15), (17) are met.
+(2) The weight of the aeroplane shall not exceed the maximum take-off weight specified for the altitude and the air temperature at the aerodrome at which the take-off is to be made.
+(3) The take-off run required and the take-off distance required, specified as being appropriate to:
+(a) the weight of the aeroplane at the commencement of the take-off run;
+2
+January 2015
+Page 22
